@@ -138,12 +138,18 @@ def main():
             # for the first 40 games, reward saving the ball to improve defence
             if game_num <= 40:
                 reward1 = 50
+            if new_state_right[2] * h > paddles[0].y + paddles[0].height or new_state_right[2] * h < paddles[0].y:
+                #ball is headed away from opponent
+                reward1 += 100
         elif paddles[0].x + paddles[0].width + ball.radius + 1 < ball.x < paddles[0].x + paddles[0].width + ball.radius + abs(ball.xvel) + 1 and ball.xvel > 0:
             # hit the left paddle, above is true for exactly one frame each time
             tapped += 1
             # for the first 20 games, reward saving the ball to improve defence
             if game_num <= 20:
                 reward2 = 50
+            if new_state_left[2] * h > paddles[1].y + paddles[1].height or new_state_left[2] * h < paddles[1].y:
+                #ball is headed away from opponent
+                reward2 += 100
 
         # for when ball is beyond saving i.e. point is scored and ball is "dead"
         if dead_ball:
@@ -205,7 +211,7 @@ def main():
         else:
             draw_window(win, paddles, ball, score2, score1, game_num=game_num)
 
-        #print(reward2, reward1, tapped)  # for debugging
+        print(reward2, reward1, tapped)  # for debugging
         # update the agent for both paddle's experiences at the end of each iteration
         agent.update(state_left, new_state_left, left_choice, reward2)
         agent.update(state_right, new_state_right, right_choice, reward1)
