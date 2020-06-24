@@ -14,7 +14,7 @@ class DQN:
     However, for more complex games with a large order of magnitude of states, generating a Q-table is time-consuming
     and resource-intensive, so we try to get a good enough approximation instead.
     """
-    def __init__(self, learning_rate=0.5, discount=0.95, exploration_rate=1.0, iterations=10000, layer_size=32, filepath=None):
+    def __init__(self, learning_rate=0.5, discount=0.95, exploration_rate=1.0, iterations=50000, layer_size=32, filepath=None):
         """
         Q-table formula approximated through Deep Q-Learning:
         Q(s, a) = Q(s, a) + learning_rate * [reward + discount * max_expected_Q(s', a) - Q(s, a)]
@@ -34,9 +34,12 @@ class DQN:
         self.discount = discount
         self.exploration_rate = exploration_rate
         self.iterations = iterations  # only defining under self so that we can save and load models in properly later
-        self.exploration_delta = exploration_rate / self.iterations  # the amount that exploration rate is reduced by after each experience
+        if self.iterations:
+            self.exploration_delta = exploration_rate / self.iterations  # the amount that exploration rate is reduced by after each experience
+        else:
+            self.exploration_delta = 0
 
-        self.input_count = 6
+        self.input_count = 5
         self.output_count = 3  # up, stay, or down; all mutually exclusive outputs
 
         if filepath:
